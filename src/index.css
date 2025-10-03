@@ -1,13 +1,193 @@
-body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+/* src/index.css */
+:root {
+  --luct-primary: #1e3a8a;    /* Deep blue (professional) */
+  --luct-secondary: #3b82f6;  /* Bright blue (accent) */
+  --luct-success: #10b981;    /* Emerald green */
+  --luct-light: #f9fafb;
+  --luct-dark: #1e293b;
+  --luct-gray: #64748b;
+  --luct-border: #e2e8f0;
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  --radius: 12px;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: 'Segoe UI', 'Roboto', 'Helvetica Neue', sans-serif;
+  background-color: navajowhite;
+  color: var(--luct-dark);
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  line-height: 1.6;
+}
+
+a {
+  text-decoration: none;
+  color: var(--luct-secondary);
+  transition: color 0.2s;
+}
+
+a:hover {
+  color: var(--luct-primary);
+}
+
+/* === Navbar === */
+.navbar {
+  box-shadow: var(--shadow-sm);
+  padding: 0.8rem 0;
+}
+
+.navbar-brand {
+  font-weight: 700;
+  font-size: 1.4rem;
+  display: flex;
+  align-items: center;
+}
+
+.navbar-brand span {
+  color: white;
+}
+
+.navbar-brand img {
+  height: 42px;
+  border-radius: 8px;
+  margin-right: 12px;
+  background: white;
+  padding: 4px;
+}
+
+/* === Cards === */
+.card {
+  border: none;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-md);
+  transition: transform 0.2s, box-shadow 0.2s;
+  background: white;
+  margin-bottom: 1.5rem;
+}
+
+.card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+}
+
+.card-header {
+  background: var(--luct-primary);
+  color: white;
+  font-weight: 600;
+  border-top-left-radius: var(--radius);
+  border-top-right-radius: var(--radius);
+  padding: 1rem 1.25rem;
+}
+
+/* === Buttons === */
+.btn {
+  border-radius: 8px;
+  font-weight: 600;
+  padding: 0.5rem 1.25rem;
+  transition: all 0.2s;
+}
+
+.btn-primary {
+  background-color: var(--luct-primary);
+  border-color: var(--luct-primary);
+}
+
+.btn-primary:hover {
+  background-color: #1a3075;
+  border-color: #1a3075;
+  transform: translateY(-1px);
+}
+
+.btn-success {
+  background-color: var(--luct-success);
+  border-color: var(--luct-success);
+}
+
+.btn-outline-primary {
+  color: var(--luct-primary);
+  border-color: var(--luct-primary);
+}
+
+.btn-outline-primary:hover {
+  background-color: var(--luct-primary);
+  color: white;
+}
+
+/* === Forms === */
+.form-control,
+.form-select {
+  border-radius: 8px;
+  border: 1px solid var(--luct-border);
+  padding: 0.6rem 0.9rem;
+  font-size: 1rem;
+}
+
+.form-control:focus,
+.form-select:focus {
+  border-color: var(--luct-secondary);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.25);
+}
+
+.form-label {
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  color: var(--luct-dark);
+}
+
+/* === Tables === */
+.table {
+  border-collapse: separate;
+  border-spacing: 0;
+  min-width: 100%;
+}
+
+.table thead th {
+  background-color: #f1f5f9;
+  font-weight: 600;
+  color: var(--luct-dark);
+  padding: 0.75rem;
+}
+
+.table tbody td {
+  padding: 0.75rem;
+  border-bottom: 1px solid var(--luct-border);
+}
+
+.table-hover tbody tr:hover {
+  background-color: #f8fafc;
+}
+
+/* === Footer === */
+footer {
+  background: var(--luct-dark);
+  color: #cbd5e1;
+  text-align: center;
+  padding: 1.25rem 0;
+  font-size: 0.95rem;
+  margin-top: auto;
+}
+
+/* === Layout Spacing === */
+.container-fluid,
+.container {
+  padding: 0 1.5rem;
+}
+
+/* === Responsive === */
+@media (max-width: 768px) {
+  .navbar-brand span {
+    font-size: 1.1rem;
+  }
+
+  .card-header {
+    text-align: center;
+  }
 }

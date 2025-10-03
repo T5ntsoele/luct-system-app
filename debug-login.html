@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>LUCT System Debug</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .info { background: #e7f3ff; padding: 10px; margin: 10px 0; border-left: 4px solid #2196F3; }
+        .success { background: #d4edda; padding: 10px; margin: 10px 0; border-left: 4px solid #28a745; }
+        .error { background: #f8d7da; padding: 10px; margin: 10px 0; border-left: 4px solid #dc3545; }
+        button { padding: 10px 20px; margin: 5px; background: #007bff; color: white; border: none; cursor: pointer; }
+        pre { background: #f8f9fa; padding: 10px; border: 1px solid #dee2e6; }
+    </style>
+</head>
+<body>
+    <h1>🧪 LUCT System Debug Helper</h1>
+    
+    <div class="info">
+        <h3>Instructions:</h3>
+        <ol>
+            <li>Open this file in your browser</li>
+            <li>Make sure your React app is running on <strong>http://localhost:3000</strong></li>
+            <li>Use these tools to debug login and navigation issues</li>
+        </ol>
+    </div>
+
+    <h2>🔍 Debug Tools</h2>
+    
+    <button onclick="checkLoginStatus()">Check Login Status</button>
+    <button onclick="testApiConnection()">Test API Connection</button>
+    <button onclick="clearStorage()">Clear Login Data</button>
+    <button onclick="simulateLogin()">Simulate Login</button>
+    
+    <div id="results"></div>
+
+    <h2>📋 Quick Actions</h2>
+    <div class="info">
+        <p><strong>After logging in successfully:</strong></p>
+        <ul>
+            <li>You should be redirected to: <code>http://localhost:3000/lecturer/dashboard</code></li>
+            <li>You should see a sidebar with: "My Classes", "Reports", "Monitoring", "Rating"</li>
+            <li>Click on each menu item to navigate</li>
+        </ul>
+        
+        <p><strong>Direct Navigation URLs:</strong></p>
+        <ul>
+            <li><a href="http://localhost:3000/lecturer/dashboard" target="_blank">Lecturer Dashboard</a></li>
+            <li><a href="http://localhost:3000/lecturer/dashboard/classes" target="_blank">My Classes</a></li>
+            <li><a href="http://localhost:3000/lecturer/dashboard/reports" target="_blank">Reports</a></li>
+            <li><a href="http://localhost:3000/lecturer/dashboard/monitoring" target="_blank">Monitoring</a></li>
+            <li><a href="http://localhost:3000/lecturer/dashboard/rating" target="_blank">Rating</a></li>
+        </ul>
+    </div>
+
+    <script>
+        function log(message, type = 'info') {
+            const results = document.getElementById('results');
+            const div = document.createElement('div');
+            div.className = type;
+            div.innerHTML = message;
+            results.appendChild(div);
+        }
+
+        function checkLoginStatus() {
+            document.getElementById('results').innerHTML = '';
+            log('<h3>🔍 Checking Login Status...</h3>');
+            
+            const token = localStorage.getItem('token');
+            const user = localStorage.getItem('user');
+            
+            if (!token || !user) {
+                log('❌ Not logged in - no token or user data found', 'error');
+                log('👉 Go to http://localhost:3000/login and login with:<br>📧 david.lecturer@luct.ls<br>🔐 password123');
+                return;
+            }
+            
+            log('✅ Login token found', 'success');
+            
+            try {
+                const userData = JSON.parse(user);
+                log('<strong>👤 User Data:</strong><pre>' + JSON.stringify(userData, null, 2) + '</pre>', 'success');
+                
+                if (userData.role === 'lecturer') {
+                    log('✅ Role: Lecturer - should redirect to /lecturer/dashboard', 'success');
+                    log('👉 Try navigating to: <a href="http://localhost:3000/lecturer/dashboard" target="_blank">http://localhost:3000/lecturer/dashboard</a>');
+                } else {
+                    log('⚠️ Role: ' + userData.role + ' - not a lecturer', 'error');
+                }
+                
+            } catch (e) {
+                log('❌ Error parsing user data: ' + e.message, 'error');
+            }
+        }
+        
+        function testApiConnection() {
+            document.getElementById('results').innerHTML = '';
+            log('<h3>🌐 Testing API Connection...</h3>');
+            
+            const token = localStorage.getItem('token');
+            
+            if (!token) {
+                log('❌ No token found - please login first', 'error');
+                return;
+            }
+            
+            // Test API endpoints
+            fetch('http://localhost:5000/api/lecturer/classes', {
+                headers: {
+                    'Authorization': 'Bearer ' + token,
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(response => {
+                if (response.ok) {
+                    log('✅ API connection successful (status: ' + response.status + ')', 'success');
+                    return response.json();
+                } else {
+                    throw new Error('HTTP ' + response.status);
+                }
+            })
+            .then(data => {
+                log('<strong>📚 Classes data:</strong><pre>' + JSON.stringify(data, null, 2) + '</pre>', 'success');
+            })
+            .catch(error => {
+                log('❌ API connection failed: ' + error.message, 'error');
+                log('💡 Make sure your backend server is running on http://localhost:5000');
+            });
+        }
+        
+        function clearStorage() {
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+            document.getElementById('results').innerHTML = '';
+            log('🧹 Cleared all login data from localStorage', 'info');
+            log('👉 You can now try logging in again');
+        }
+        
+        function simulateLogin() {
+            document.getElementById('results').innerHTML = '';
+            log('<h3>🎭 Simulating Login Process...</h3>');
+            
+            // Test login
+            fetch('http://localhost:5000/api/auth/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    email: 'david.lecturer@luct.ls',
+                    password: 'password123'
+                })
+            })
+            .then(response => {
+                if (response.ok) {
+                    log('✅ Login API successful', 'success');
+                    return response.json();
+                } else {
+                    throw new Error('HTTP ' + response.status);
+                }
+            })
+            .then(data => {
+                log('<strong>🎉 Login Response:</strong><pre>' + JSON.stringify(data, null, 2) + '</pre>', 'success');
+                
+                // Store the data (simulate what the app does)
+                localStorage.setItem('token', data.token);
+                localStorage.setItem('user', JSON.stringify(data.user));
+                
+                log('✅ Stored login data in localStorage', 'success');
+                log('👉 Now try navigating to: <a href="http://localhost:3000/lecturer/dashboard" target="_blank">Lecturer Dashboard</a>');
+            })
+            .catch(error => {
+                log('❌ Login failed: ' + error.message, 'error');
+                log('💡 Make sure your backend server is running and credentials are correct');
+            });
+        }
+    </script>
+</body>
+</html>
